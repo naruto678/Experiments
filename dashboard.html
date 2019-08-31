@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<head>
+<title>Dashboard</title>
+<style>
+	#rentTable{
+		display:none;
+	}
+	#requestsLink{
+		
+		color:red;
+	}
+
+
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+</head>
+
+
+
+<body>
+<!-- Here there should be links that the user approved and also links to change password and the pending requests and also the requests he made and are they pending or not -->
+
+<h1>Welcome to the dashboard turd .</h1><br>
+<button id="requestsLink">Click here to see the pending requests</button>
+<div id='container'>
+	<table id='rentTable'>
+		<tr>
+		<td>Name</td>
+		<td>Amount</td>
+		<td>AppliedFor</td>
+		<td>AppliedOn</td>
+		<td>Approved</td>
+		</tr>
+	</table>
+
+</div>
+
+</body>
+<script>
+
+	$(document).ready(function(){
+	$('#requestsLink').click(function(){
+		
+		$.ajax({
+			async:false,
+			url:'http://localhost:3000/requestsPending',
+			dataType:'text/plain',
+			contentType:'text/plain',
+			success:function(data){
+				console.log(`This is the data`,data);
+
+				dataHandler(data);
+			}
+		});
+		function dataHandler(data){
+			console.log('fucking hell you never get this cocksucker');
+			let res=JSON.parse(data);
+			res.forEach(function(rawDataPacket){
+			let tableRow=document.createElement('tr');
+			Object.getOwnPropertyNames(rawDataPacket).forEach(function(key){
+				tableRow.appendChild(document.createElement('td').appendChild(document.createTextNode(rawDataPacket.key)));
+
+			});
+
+
+			document.getElementById('rentTable').appendChild(tableRow);
+		});
+
+		document.getElementById('rentTable').display='inline-block'
+
+
+
+		}
+	
+		
+		
+		});
+});
+
+</script>
+
+</html>
