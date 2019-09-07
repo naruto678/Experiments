@@ -3,8 +3,10 @@
 <title>Dashboard</title>
 <meta encoding="utf-8" content='no-cache'/>
 <style>
-	#rentTable{
-		display:none;
+	table{
+		display:inline-block;
+		border: 1px solid black;
+  		border-collapse: collapse;
 	}
 	#requestsLink{
 		
@@ -25,47 +27,45 @@
 <h1>Welcome to the dashboard turd .</h1><br>
 <button id="requestsLink">Click here to see the pending requests</button>
 <div id='container'>
-	<table id='rentTable'>
-		<tr>
-		<td>Name</td>
-		<td>Amount</td>
-		<td>AppliedFor</td>
-		<td>AppliedOn</td>
-		<td>Approved</td>
-		</tr>
-	</table>
-
+	
 </div>
 
 </body>
 <script>
 
 	$(document).ready(function(){
+		let ajaxSentOnce=false;
 		$('#requestsLink').click(function(){
 
+			if(!ajaxSentOnce)
+			{
+				$.ajax({url:'/requestsPending', success: function(response){
+					if($('container').children().length==0){
+					response=JSON.parse(response);
+					let table=document.createElement('TABLE');
+					response.forEach(function(rawDataPacket){
+						/*
+						for each rawDataPacket make a tr and for each element in tr make a td and append it to tr
+						*/
+						let row=table.insertRow();
+						Object.getOwnPropertyNames(rawDataPacket).forEach(function(key){
+							row.insertCell(-1).innerHTML=rawDataPacket[key];
 
-  $.ajax({url:'/requestsPending', success: function(response){
-  	response=JSON.parse(response);
-  	let table=document.getElementById('rentTable');
-    response.forEach(function(rawDataPacket){
-		/*
-		for each rawDataPacket make a tr and for each element in tr make a td and append it to tr
-		*/
-		let row=table.insertRow();
-		Object.getOwnPropertyNames(rawDataPacket).forEach(function(key){
-			row.insertCell(-1).innerHTML=rawDataPacket[key];
+						});
+						
 
-		})
-	
+					});
+					$('#container').append(table);
 
+					}
+					console.log('table prepared');
 
+				}});
+				ajaxSentOnce=true;
+			}
+				
+    	});
 	});
-	document.getElementById('rentTable').style.display="inline-block";
-	console.log("Table prepared");
-
-  	}});
-		})
-	})
 
 
 </script>
