@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <head>
 <title>Dashboard</title>
+<meta encoding="utf-8" content='no-cache'/>
 <style>
 	#rentTable{
 		display:none;
@@ -40,43 +41,32 @@
 <script>
 
 	$(document).ready(function(){
-	$('#requestsLink').click(function(){
-		
-		$.ajax({
-			async:false,
-			url:'http://localhost:3000/requestsPending',
-			dataType:'text/plain',
-			contentType:'text/plain',
-			success:function(data){
-				console.log(`This is the data`,data);
-
-				dataHandler(data);
-			}
-		});
-		function dataHandler(data){
-			console.log('fucking hell you never get this cocksucker');
-			let res=JSON.parse(data);
-			res.forEach(function(rawDataPacket){
-			let tableRow=document.createElement('tr');
-			Object.getOwnPropertyNames(rawDataPacket).forEach(function(key){
-				tableRow.appendChild(document.createElement('td').appendChild(document.createTextNode(rawDataPacket.key)));
-
-			});
+		$('#requestsLink').click(function(){
 
 
-			document.getElementById('rentTable').appendChild(tableRow);
-		});
+  $.ajax({url:'/requestsPending', success: function(response){
+  	response=JSON.parse(response);
+  	let table=document.getElementById('rentTable');
+    response.forEach(function(rawDataPacket){
+		/*
+		for each rawDataPacket make a tr and for each element in tr make a td and append it to tr
+		*/
+		let row=table.insertRow();
+		Object.getOwnPropertyNames(rawDataPacket).forEach(function(key){
+			row.insertCell(-1).innerHTML=rawDataPacket[key];
 
-		document.getElementById('rentTable').display='inline-block'
-
-
-
-		}
+		})
 	
-		
-		
-		});
-});
+
+
+	});
+	document.getElementById('rentTable').style.display="inline-block";
+	console.log("Table prepared");
+
+  	}});
+		})
+	})
+
 
 </script>
 

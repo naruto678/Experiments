@@ -9,6 +9,7 @@ const logFile='/home/arnab/logFile'
 const DOMParser=require('dom-parser');
 
 
+
 const app=express();
 const domParser=new DOMParser();
 
@@ -35,22 +36,22 @@ app.post('/login',function(req,res){
 	trying to do a sanity check;
 
 	*/
-	res.sendFile('/home/arnab/dashboard.html');
+	res.sendFile(path.join(process.cwd(),'dashboard.html'));
 
 
 
 });
 app.get('/dashboard',function(req,res){
-	res.sendFile('/home/arnab/dashboard.html');
+	res.sendFile(path.join(process.cwd(),'dashboard.html'));
 })
 
 app.get('/',function(req,res){
 	
 	if(req.headers.cookie){
-		return res.redirect('/dashboard');
+		return res.sendFile(path.join(process.cwd(),'dashboard.html'));
 	}
 
-	res.sendFile('/home/arnab/login.html');
+	res.sendFile(path.join(process.cwd(),'login.html'));
 
 });
 
@@ -98,7 +99,7 @@ app.get('/requestsPending',function(request,response){
 					
 					arr.push(record);
 				});
-				console.log(JSON.stringify(arr));
+				console.log(typeof JSON.stringify(arr));
 				response.send(JSON.stringify(arr));
 			
 			});
